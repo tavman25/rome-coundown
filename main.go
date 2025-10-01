@@ -21,6 +21,12 @@ func main() {
 	// Serve static files
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
+	// Health check endpoint
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK - Rome Countdown is running!"))
+	})
+
 	// Main page handler
 	http.HandleFunc("/", homeHandler)
 	
@@ -48,13 +54,24 @@ func main() {
 	}
 	
 	fmt.Printf("Server starting on port %s\n", port)
+	fmt.Println("Available routes:")
+	fmt.Println("  GET /")
+	fmt.Println("  GET /health")
+	fmt.Println("  GET /wallpaper") 
+	fmt.Println("  GET /mobile")
+	fmt.Println("  GET /standalone")
+	fmt.Println("  GET /corner")
+	fmt.Println("  GET /api/countdown")
+	
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
+	log.Printf("Home handler called for path: %s", r.URL.Path)
 	tmpl := template.Must(template.ParseFiles("templates/index.html"))
 	err := tmpl.Execute(w, nil)
 	if err != nil {
+		log.Printf("Template error: %v", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
