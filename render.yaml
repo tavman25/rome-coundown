@@ -1,0 +1,7 @@
+# Render.com Deployment Configuration
+# This file is optional - Render can auto-detect Go projects
+
+# Manual settings to use in Render dashboard:
+# Build Command: go build -o main .
+# Start Command: ./main
+# Environment: Go

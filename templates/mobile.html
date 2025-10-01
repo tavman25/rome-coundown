@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Countdown to Rome - Mobile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/mobile.css">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2c1810">
+</head>
+<body>
+    <div class="mobile-container">
+        <div class="time-display" id="current-time">
+            <span id="clock">--:--</span>
+            <span id="date">Loading...</span>
+        </div>
+        
+        <div class="main-content">
+            <h1 class="title">Rome Awaits</h1>
+            <p class="subtitle">La Città Eterna</p>
+            
+            <div class="countdown-mobile">
+                <div class="time-row">
+                    <div class="time-unit">
+                        <span class="time-value" id="days">--</span>
+                        <span class="time-label">Days</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value" id="hours">--</span>
+                        <span class="time-label">Hours</span>
+                    </div>
+                </div>
+                <div class="time-row">
+                    <div class="time-unit">
+                        <span class="time-value" id="minutes">--</span>
+                        <span class="time-label">Minutes</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value" id="seconds">--</span>
+                        <span class="time-label">Seconds</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="event-info">
+                <p class="event-date">October 16, 2025</p>
+                <p class="event-time">6:00 AM</p>
+            </div>
+            
+            <div class="quote-mobile">
+                <p>"When in Rome..."</p>
+            </div>
+        </div>
+        
+        <div class="bottom-info">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <p class="progress-text" id="progress-text">Loading...</p>
+        </div>
+    </div>
+    
+    <script src="/static/js/mobile.js"></script>
+</body>
+</html>

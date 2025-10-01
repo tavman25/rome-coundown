@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Countdown to Rome - Standalone</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#2c1810">
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ291bnRkb3duIHRvIFJvbWUiLCJzaG9ydF9uYW1lIjoiUm9tZSIsInN0YXJ0X3VybCI6Ii4iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMmMxODEwIiwidGhlbWVfY29sb3IiOiIjZGFhNTIwIn0=">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Crimson+Text:wght@400;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Text', serif;
+            background: linear-gradient(180deg, 
+                #1a1a1a 0%, 
+                #2c1810 30%, 
+                #8b4513 60%, 
+                #daa520 90%, 
+                #2c1810 100%);
+            background-size: 100% 200%;
+            animation: slowShift 60s ease-in-out infinite alternate;
+            color: #f5f5dc;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        @keyframes slowShift {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 0% 100%; }
+        }
+
+        .standalone-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            padding: 2rem 1.5rem;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(218, 165, 32, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(139, 69, 19, 0.1) 0%, transparent 50%);
+        }
+
+        .time-display {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        #clock {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+            display: block;
+            line-height: 1;
+        }
+
+        #date {
+            font-size: 1rem;
+            color: #e6d7c3;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #daa520, #ffd700, #daa520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #e6d7c3;
+            font-style: italic;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .countdown-standalone {
+            margin: 2rem 0;
+        }
+
+        .time-row {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .time-unit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1rem;
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            box-shadow: 
+                0 8px 16px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            min-width: 80px;
+            transition: transform 0.3s ease;
+        }
+
+        .time-unit:active {
+            transform: scale(0.95);
+        }
+
+        .time-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            line-height: 1;
+            margin-bottom: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .time-value.updating {
+            transform: scale(1.1);
+            color: #fff;
+        }
+
+        .time-label {
+            font-size: 0.8rem;
+            color: #e6d7c3;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .event-info {
+            margin: 1.5rem 0;
+        }
+
+        .event-date {
+            font-size: 1.1rem;
+            color: #ffd700;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .event-time {
+            font-size: 0.9rem;
+            color: #e6d7c3;
+            opacity: 0.8;
+        }
+
+        .quote-standalone p {
+            font-size: 1rem;
+            color: #d4af37;
+            font-style: italic;
+            opacity: 0.7;
+            margin-top: 1rem;
+        }
+
+        .bottom-info {
+            margin-top: 2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #daa520, #ffd700);
+            border-radius: 2px;
+            transition: width 1s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: #e6d7c3;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .offline-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 150, 0, 0.8);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Responsive adjustments */
+        @media (max-height: 700px) {
+            .standalone-container { padding: 1rem; }
+            .title { font-size: 2.5rem; }
+            #clock { font-size: 2rem; }
+            .time-value { font-size: 1.5rem; }
+            .time-unit { padding: 0.8rem; min-width: 70px; }
+        }
+
+        @media (max-width: 360px) {
+            .time-row { gap: 1rem; }
+            .time-unit { min-width: 65px; padding: 0.7rem; }
+            .title { font-size: 2rem; }
+        }
+
+        /* Lock screen optimizations */
+        @media (orientation: portrait) and (max-height: 800px) {
+            .standalone-container {
+                justify-content: center;
+                padding: 1rem;
+            }
+            
+            .time-display {
+                position: absolute;
+                top: 2rem;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            
+            .bottom-info {
+                position: absolute;
+                bottom: 2rem;
+                left: 1rem;
+                right: 1rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+
+        .countdown-standalone {
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .celebration {
+            animation: celebrate 2s ease-in-out infinite;
+        }
+
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.05) rotate(1deg); }
+            75% { transform: scale(1.05) rotate(-1deg); }
+        }
+
+        .celebration-text p {
+            font-size: 1.2rem;
+            color: #ffd700;
+            margin: 0.5rem 0;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-indicator">📱 STANDALONE</div>
+    
+    <div class="standalone-container">
+        <div class="time-display">
+            <span id="clock">--:--</span>
+            <span id="date">Loading...</span>
+        </div>
+        
+        <div class="main-content">
+            <h1 class="title">Rome Awaits</h1>
+            <p class="subtitle">La Città Eterna</p>
+            
+            <div class="countdown-standalone">
+                <div class="time-row">
+                    <div class="time-unit">
+                        <span class="time-value" id="days">--</span>
+                        <span class="time-label">Days</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value" id="hours">--</span>
+                        <span class="time-label">Hours</span>
+                    </div>
+                </div>
+                <div class="time-row">
+                    <div class="time-unit">
+                        <span class="time-value" id="minutes">--</span>
+                        <span class="time-label">Minutes</span>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-value" id="seconds">--</span>
+                        <span class="time-label">Seconds</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="event-info">
+                <p class="event-date">October 16, 2025</p>
+                <p class="event-time">6:00 AM</p>
+            </div>
+            
+            <div class="quote-standalone">
+                <p>"When in Rome..."</p>
+            </div>
+        </div>
+        
+        <div class="bottom-info">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+            <p class="progress-text" id="progress-text">Loading...</p>
+        </div>
+    </div>
+
+    <script>
+        class StandaloneCountdownTimer {
+            constructor() {
+                this.daysElement = document.getElementById('days');
+                this.hoursElement = document.getElementById('hours');
+                this.minutesElement = document.getElementById('minutes');
+                this.secondsElement = document.getElementById('seconds');
+                this.clockElement = document.getElementById('clock');
+                this.dateElement = document.getElementById('date');
+                this.progressElement = document.getElementById('progress');
+                this.progressTextElement = document.getElementById('progress-text');
+                
+                // Target: October 16, 2025 at 6:00 AM UTC
+                this.targetDate = new Date(2025, 9, 16, 6, 0, 0);
+                this.startDate = new Date(2025, 0, 1);
+                
+                this.init();
+            }
+            
+            init() {
+                this.updateAll();
+                this.updateClock();
+                
+                // Update every second
+                setInterval(() => {
+                    this.updateAll();
+                    this.updateClock();
+                }, 1000);
+                
+                this.preventSleep();
+            }
+            
+            updateAll() {
+                const now = new Date();
+                const remaining = this.targetDate - now;
+                
+                if (remaining <= 0) {
+                    this.showEventReached();
+                    return;
+                }
+                
+                const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+                
+                this.animateUpdate(this.daysElement, days);
+                this.animateUpdate(this.hoursElement, hours);
+                this.animateUpdate(this.minutesElement, minutes);
+                this.animateUpdate(this.secondsElement, seconds);
+                
+                this.updateProgress();
+            }
+            
+            updateClock() {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const dateString = now.toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'short',
+                    day: 'numeric'
+                });
+                
+                this.clockElement.textContent = timeString;
+                this.dateElement.textContent = dateString;
+            }
+            
+            updateProgress() {
+                const now = new Date();
+                const totalTime = this.targetDate - this.startDate;
+                const elapsed = now - this.startDate;
+                const progress = Math.min(Math.max((elapsed / totalTime) * 100, 0), 100);
+                
+                this.progressElement.style.width = progress + '%';
+                
+                const remaining = this.targetDate - now;
+                const totalDays = Math.ceil(remaining / (1000 * 60 * 60 * 24));
+                
+                if (remaining > 0) {
+                    this.progressTextElement.textContent = `${totalDays} days until Rome`;
+                } else {
+                    this.progressTextElement.textContent = 'Welcome to Rome!';
+                }
+            }
+            
+            animateUpdate(element, value) {
+                const currentValue = parseInt(element.textContent) || 0;
+                const newValue = value;
+                
+                if (currentValue !== newValue) {
+                    element.classList.add('updating');
+                    
+                    setTimeout(() => {
+                        element.textContent = this.formatTime(newValue);
+                        element.classList.remove('updating');
+                    }, 150);
+                }
+            }
+            
+            formatTime(value) {
+                return value.toString().padStart(2, '0');
+            }
+            
+            showEventReached() {
+                document.querySelector('.main-content').innerHTML = `
+                    <div class="celebration">
+                        <h1 class="title">🎉 Roma! 🎉</h1>
+                        <p class="subtitle">Benvenuti nella Città Eterna!</p>
+                        <div class="celebration-text">
+                            <p>Welcome to Rome!</p>
+                            <p>Your journey begins now!</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            preventSleep() {
+                // Keep screen awake on mobile devices
+                if ('wakeLock' in navigator) {
+                    navigator.wakeLock.request('screen').then(lock => {
+                        console.log('Screen wake lock active');
+                    }).catch(err => {
+                        console.log('Wake lock failed:', err);
+                    });
+                }
+                
+                // Fallback: periodic tiny activity
+                setInterval(() => {
+                    document.body.style.transform = 'translateZ(0)';
+                    setTimeout(() => {
+                        document.body.style.transform = '';
+                    }, 1);
+                }, 30000);
+            }
+        }
+
+        // Touch interactions
+        document.addEventListener('touchstart', function(e) {
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+        });
+
+        // Prevent context menu and zooming
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('gesturestart', e => e.preventDefault());
+        document.addEventListener('gesturechange', e => e.preventDefault());
+        document.addEventListener('gestureend', e => e.preventDefault());
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            new StandaloneCountdownTimer();
+            
+            // Hide address bar on mobile
+            setTimeout(() => {
+                window.scrollTo(0, 1);
+            }, 100);
+        });
+
+        // Handle orientation changes
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                window.scrollTo(0, 1);
+            }, 100);
+        });
+
+        // Service Worker for offline support
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                const CACHE_NAME = 'rome-countdown-standalone-v1';
+                self.addEventListener('install', () => {
+                    console.log('Service Worker installed');
+                });
+                self.addEventListener('fetch', event => {
+                    event.respondWith(
+                        caches.match(event.request).then(response => {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+            `)).then(registration => {
+                console.log('SW registered');
+            }).catch(error => {
+                console.log('SW registration failed');
+            });
+        }
+    </script>
+</body>
+</html>

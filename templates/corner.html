@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Rome - Corner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/corner.css">
+</head>
+<body>
+    <div class="corner-container">
+        <div class="countdown-widget">
+            <h2 class="widget-title">Rome Countdown</h2>
+            <div class="countdown-mini">
+                <div class="time-unit">
+                    <span class="time-value" id="days">--</span>
+                    <span class="time-label">D</span>
+                </div>
+                <span class="mini-sep">:</span>
+                <div class="time-unit">
+                    <span class="time-value" id="hours">--</span>
+                    <span class="time-label">H</span>
+                </div>
+                <span class="mini-sep">:</span>
+                <div class="time-unit">
+                    <span class="time-value" id="minutes">--</span>
+                    <span class="time-label">M</span>
+                </div>
+                <span class="mini-sep">:</span>
+                <div class="time-unit">
+                    <span class="time-value" id="seconds">--</span>
+                    <span class="time-label">S</span>
+                </div>
+            </div>
+            <p class="target-date">Oct 16, 2025</p>
+        </div>
+    </div>
+    
+    <script src="/static/js/countdown.js"></script>
+</body>
+</html>

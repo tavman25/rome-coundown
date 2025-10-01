@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown to Rome - Wallpaper Redirect</title>
+    <meta http-equiv="refresh" content="0; URL=http://localhost:8080/wallpaper">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #2c1810;
+            color: #ffd700;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .loading {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <h2>Loading Countdown to Rome...</h2>
+        <p>Redirecting to wallpaper...</p>
+        <p><small>If this doesn't work, make sure your Go server is running at localhost:8080</small></p>
+    </div>
+    
+    <script>
+        // Immediate redirect
+        window.location.href = "http://localhost:8080/wallpaper";
+        
+        // Backup redirect after 2 seconds
+        setTimeout(function() {
+            window.location.href = "http://localhost:8080/wallpaper";
+        }, 2000);
+    </script>
+</body>
+</html>
