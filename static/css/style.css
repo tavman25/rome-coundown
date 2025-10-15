@@ -10,7 +10,17 @@ body {
     overflow: hidden;
     background: 
         linear-gradient(rgba(44, 24, 16, 0.8), rgba(139, 69, 19, 0.8), rgba(218, 165, 32, 0.8)),
-        url('/static/images/pantheon.jpg') center/cover no-repeat,
+        url('/static/images/pantheon-small.jpg') center/cover no-repeat,
+        /* CSS fallback with Roman column pattern */
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 80px,
+            rgba(218, 165, 32, 0.1) 80px,
+            rgba(218, 165, 32, 0.1) 85px,
+            transparent 85px,
+            transparent 165px
+        ),
         linear-gradient(135deg, #2c1810 0%, #8b4513 50%, #daa520 100%);
     background-attachment: fixed;
     color: #f5f5dc;

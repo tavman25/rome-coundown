@@ -8,14 +8,24 @@ body {
     font-family: 'Crimson Text', serif;
     background: 
         linear-gradient(rgba(26, 26, 26, 0.8), rgba(44, 24, 16, 0.8), rgba(139, 69, 19, 0.8), rgba(218, 165, 32, 0.8), rgba(44, 24, 16, 0.8)),
-        url('/static/images/pantheon.jpg') center/cover no-repeat,
+        url('/static/images/pantheon-small.jpg') center/cover no-repeat,
+        /* CSS fallback with subtle Roman pattern */
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 60px,
+            rgba(218, 165, 32, 0.05) 60px,
+            rgba(218, 165, 32, 0.05) 65px,
+            transparent 65px,
+            transparent 125px
+        ),
         linear-gradient(180deg, 
             #1a1a1a 0%, 
             #2c1810 30%, 
             #8b4513 60%, 
             #daa520 90%, 
             #2c1810 100%);
-    background-size: 100% 100%, cover, 100% 200%;
+    background-size: 100% 100%, cover, 100% 100%, 100% 200%;
     animation: slowShift 60s ease-in-out infinite alternate;
     color: #f5f5dc;
     overflow: hidden;
