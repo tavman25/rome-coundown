@@ -105,8 +105,8 @@ func standaloneHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func countdownAPI(w http.ResponseWriter, r *http.Request) {
-	// Target date: October 16, 2025 at 6:00 AM
-	targetDate := time.Date(2025, 10, 16, 6, 0, 0, 0, time.UTC)
+	// Target date: October 17, 2025 at 9:15 AM Rome time (7:15 AM UTC)
+	targetDate := time.Date(2025, 10, 17, 7, 15, 0, 0, time.UTC)
 	now := time.Now().UTC()
 	
 	// Calculate remaining time
