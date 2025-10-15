@@ -9,8 +9,9 @@ class MobileCountdownTimer {
         this.progressElement = document.getElementById('progress');
         this.progressTextElement = document.getElementById('progress-text');
         
-        this.targetDate = new Date(2025, 9, 17, 9, 15, 0); // October 17, 2025 at 9:15 AM Rome time
-        this.startDate = new Date(2025, 0, 1); // January 1, 2025
+        // Target date: October 17, 2025 at 7:15 AM UTC (9:15 AM Rome time)
+        this.targetDate = new Date(Date.UTC(2025, 9, 17, 7, 15, 0)); // UTC time
+        this.startDate = new Date(Date.UTC(2025, 0, 1)); // January 1, 2025 UTC
         
         this.init();
     }

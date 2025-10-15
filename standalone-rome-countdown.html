@@ -292,6 +292,98 @@
             margin: 0.5rem 0;
             font-weight: 600;
         }
+
+        /* Fireworks Animation System */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .firework {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: firework-burst 2s ease-out;
+        }
+
+        @keyframes firework-burst {
+            0% { opacity: 1; transform: scale(0); }
+            15% { opacity: 1; transform: scale(0.3); }
+            50% { opacity: 0.8; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.2); }
+        }
+
+        .firework::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: inherit;
+            border-radius: 50%;
+            animation: particle-1 2s ease-out;
+        }
+
+        .firework::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 3px;
+            height: 3px;
+            background: inherit;
+            border-radius: 50%;
+            animation: particle-2 2s ease-out;
+        }
+
+        @keyframes particle-1 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(360deg) translateX(100px); opacity: 0; }
+        }
+
+        @keyframes particle-2 {
+            0% { transform: translate(-50%, -50%) rotate(0deg) translateX(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) rotate(-360deg) translateX(80px); opacity: 0; }
+        }
+
+        .firework-gold {
+            background: radial-gradient(circle, #ffd700, #ffed4e, #ff6b35);
+            box-shadow: 0 0 20px #ffd700, 0 0 40px #ffd700, 0 0 60px #ffd700;
+        }
+
+        .firework-red {
+            background: radial-gradient(circle, #ff1744, #ff5722, #ffab00);
+            box-shadow: 0 0 20px #ff1744, 0 0 40px #ff1744, 0 0 60px #ff1744;
+        }
+
+        .firework-roman {
+            background: radial-gradient(circle, #d4af37, #ffd700, #b8860b, #daa520);
+            box-shadow: 0 0 20px #d4af37, 0 0 40px #ffd700, 0 0 60px #b8860b;
+            animation: firework-burst 2.5s ease-out;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: sparkle 1.5s ease-out;
+            box-shadow: 0 0 10px white;
+        }
+
+        @keyframes sparkle {
+            0% { opacity: 1; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0) rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -349,6 +441,54 @@
     </div>
 
     <script>
+        // Fireworks Manager for Standalone
+        class StandaloneFireworks {
+            constructor() {
+                this.container = null;
+                this.colors = ['firework-gold', 'firework-red', 'firework-roman'];
+                this.init();
+            }
+
+            init() {
+                this.container = document.createElement('div');
+                this.container.className = 'fireworks-container';
+                document.body.appendChild(this.container);
+                this.startAutoFireworks();
+            }
+
+            createFirework(x, y, colorClass = null) {
+                const firework = document.createElement('div');
+                firework.className = `firework ${colorClass || this.getRandomColor()}`;
+                const size = Math.random() * 40 + 60;
+                firework.style.width = size + 'px';
+                firework.style.height = size + 'px';
+                firework.style.left = (x || Math.random() * window.innerWidth) + 'px';
+                firework.style.top = (y || Math.random() * window.innerHeight * 0.6) + 'px';
+                
+                this.container.appendChild(firework);
+                
+                setTimeout(() => {
+                    if (firework.parentNode) firework.parentNode.removeChild(firework);
+                }, 2500);
+            }
+
+            getRandomColor() {
+                return this.colors[Math.floor(Math.random() * this.colors.length)];
+            }
+
+            burst(count = 2) {
+                for (let i = 0; i < count; i++) {
+                    setTimeout(() => this.createFirework(), i * 200);
+                }
+            }
+
+            startAutoFireworks() {
+                setInterval(() => {
+                    if (Math.random() < 0.6) this.burst(1);
+                }, Math.random() * 8000 + 10000);
+            }
+        }
+
         class StandaloneCountdownTimer {
             constructor() {
                 this.daysElement = document.getElementById('days');
@@ -360,9 +500,9 @@
                 this.progressElement = document.getElementById('progress');
                 this.progressTextElement = document.getElementById('progress-text');
                 
-                // Target: October 17, 2025 at 9:15 AM Rome time
-                this.targetDate = new Date(2025, 9, 17, 9, 15, 0);
-                this.startDate = new Date(2025, 0, 1);
+                // Target: October 17, 2025 at 7:15 AM UTC (9:15 AM Rome time)
+                this.targetDate = new Date(Date.UTC(2025, 9, 17, 7, 15, 0)); // UTC time
+                this.startDate = new Date(Date.UTC(2025, 0, 1)); // January 1, 2025 UTC
                 
                 this.init();
             }
@@ -534,6 +674,12 @@
                 console.log('SW registration failed');
             });
         }
+
+        // Initialize fireworks and countdown
+        document.addEventListener('DOMContentLoaded', () => {
+            window.fireworks = new StandaloneFireworks();
+            setTimeout(() => window.fireworks.burst(2), 1000);
+        });
     </script>
 </body>
 </html>

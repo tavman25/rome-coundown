@@ -18,8 +18,15 @@ type CountdownData struct {
 }
 
 func main() {
-	// Serve static files
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	// Serve static files with cache-busting headers
+	staticHandler := http.StripPrefix("/static/", http.FileServer(http.Dir("static")))
+	http.HandleFunc("/static/", func(w http.ResponseWriter, r *http.Request) {
+		// Add cache-busting headers
+		w.Header().Set("Cache-Control", "no-cache, no-store, must-revalidate")
+		w.Header().Set("Pragma", "no-cache")
+		w.Header().Set("Expires", "0")
+		staticHandler.ServeHTTP(w, r)
+	})
 
 	// Health check endpoint
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
