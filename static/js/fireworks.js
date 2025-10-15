@@ -17,9 +17,11 @@ class FireworksManager {
 
     init() {
         // Create fireworks container
+        console.log('Creating fireworks container...');
         this.container = document.createElement('div');
         this.container.className = 'fireworks-container';
         document.body.appendChild(this.container);
+        console.log('Fireworks container added to body');
         
         // Start ambient sparkles
         this.createAmbientSparkles();
@@ -32,6 +34,7 @@ class FireworksManager {
     }
 
     createFirework(x, y, colorClass = null) {
+        console.log('Creating firework at:', x, y, 'with class:', colorClass);
         const firework = document.createElement('div');
         firework.className = `firework ${colorClass || this.getRandomColor()}`;
         
@@ -44,7 +47,9 @@ class FireworksManager {
         firework.style.left = (x || Math.random() * window.innerWidth) + 'px';
         firework.style.top = (y || Math.random() * window.innerHeight * 0.6) + 'px';
         
+        console.log('Firework positioned at:', firework.style.left, firework.style.top);
         this.container.appendChild(firework);
+        console.log('Firework added to container');
         
         // Create additional particles
         this.createParticles(firework);
@@ -149,13 +154,16 @@ class FireworksManager {
     }
 
     startAutoFireworks() {
-        // Random fireworks every 8-15 seconds
+        // Immediate firework on start
+        setTimeout(() => {
+            this.burst(3);
+        }, 500);
+        
+        // More frequent fireworks every 3-6 seconds
         this.autoInterval = setInterval(() => {
-            if (Math.random() < 0.7) { // 70% chance
-                const count = Math.random() < 0.3 ? 2 : 1; // Sometimes double burst
-                this.burst(count);
-            }
-        }, Math.random() * 7000 + 8000);
+            const count = Math.random() < 0.5 ? 2 : 1; // More frequent double bursts
+            this.burst(count);
+        }, Math.random() * 3000 + 3000); // 3-6 seconds instead of 8-15
     }
 
     stopAutoFireworks() {
@@ -182,9 +190,9 @@ class FireworksManager {
 
         // Trigger on page interactions
         document.addEventListener('click', (e) => {
-            if (Math.random() < 0.3) { // 30% chance on click
-                this.createFirework(e.clientX, e.clientY);
-            }
+            // Always trigger fireworks on click for testing
+            this.createFirework(e.clientX, e.clientY);
+            console.log('Click firework triggered at:', e.clientX, e.clientY);
         });
 
         // Special triggers for milestone moments
@@ -247,12 +255,19 @@ class FireworksManager {
 
 // Initialize fireworks when page loads
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing fireworks...');
     window.fireworks = new FireworksManager();
     
-    // Add some initial celebration
+    // Immediate celebration when page loads
     setTimeout(() => {
-        window.fireworks.burst(2);
+        console.log('Triggering initial fireworks...');
+        window.fireworks.burst(4);
     }, 1000);
+    
+    // Extra frequent fireworks for testing
+    setTimeout(() => {
+        window.fireworks.romanCelebration();
+    }, 3000);
 });
 
 // Export for manual triggering
